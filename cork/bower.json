@@ -1,0 +1,22 @@
+{
+  "name": "cork",
+  "version": "0.0.0",
+  "authors": [
+    "Neonsoftware"
+  ],
+  "description": "Cork Front-end",
+  "main": "cork.html",
+  "license": "http://polymer.github.io/LICENSE.txt",
+  "homepage": "https://github.com/neonsoftware/cork/",
+  "ignore": [
+    "/.*",
+    "/test/",
+    "/demo/"
+  ],
+  "dependencies": {
+    "polymer": "Polymer/polymer#1.1.2",
+    "more-routing" : "PolymerLabs/more-routing",
+    "paper-elements": "PolymerElements/paper-elements",
+    "iron-elements": "PolymerElements/iron-elements"
+  }
+}

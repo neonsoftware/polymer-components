@@ -1,0 +1,151 @@
+<!doctype html>
+<!--
+Copyright (c) 2015 The Polymer Project Authors. All rights reserved.
+This code may only be used under the BSD style license found at http://polymer.github.io/LICENSE.txt
+The complete set of authors may be found at http://polymer.github.io/AUTHORS.txt
+The complete set of contributors may be found at http://polymer.github.io/CONTRIBUTORS.txt
+Code distributed by Google as part of the polymer project is also
+subject to an additional IP rights grant found at http://polymer.github.io/PATENTS.txt
+-->
+
+<html>
+  <head>
+
+    <title>iron-selector</title>
+
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <script src="../../webcomponentsjs/webcomponents-lite.js"></script>
+    <link rel="import" href="../cork-language.html">
+    <link rel="import" href="../templates-detail.html">
+
+    <style>
+      body {
+        font-family: sans-serif;
+      }
+    </style>
+
+    <dom-module id="cork-language-demo">
+      <template>
+
+        <button on-click="_ecco">fr</button>
+        <cork-language-select language="{{language}}"> </cork-language-select>
+        Language : <span>{{language}}</span>
+      </template>
+    </dom-module>
+
+    <script>
+        HTMLImports.whenReady(function() {
+          Polymer({
+            is: 'cork-language-demo',
+            properties: {
+              language : { type:String, value: "en" }
+            },
+
+            _ecco:function(e){
+              console.log("Passo a francese");
+              this.language = "fr";
+            }
+
+
+          });
+        });
+    </script>
+
+
+
+
+    <dom-module id="blocks-filter-demo">
+      <template>
+        <iron-ajax auto method="GET" url="{{templategetURL}}" handle-as="json" content-type="application/json" last-response="{{inblocks}}"></iron-ajax>
+
+        <blocks-filter inblocks="[[inblocks]]" alltagnames="{{tagnames}}" filteredblocks="{{resultBlocks}}"> </blocks-filter>
+
+        Result:
+        <template is="dom-repeat" items="{{resultBlocks}}">
+          aaa <span>{{item.content}}</span><br>
+        </template>
+
+      </template>
+    </dom-module>
+
+    <script>
+        HTMLImports.whenReady(function() {
+          Polymer({
+            is: 'blocks-filter-demo',
+            properties: {
+            },
+
+            ready:function(){
+              this.tagnames = ['C++', 'Java'];
+              this.templategetURL = 'http://rusty.blue/pieces';
+            }
+          });
+        });
+    </script>
+
+
+    <dom-module id="blocks-order-demo">
+      <template>
+        <iron-ajax auto method="GET" url="{{templategetURL}}" handle-as="json" content-type="application/json" last-response="{{inblocks}}"></iron-ajax>
+
+        <blocks-filter alltagnames="{{tagnames}}" inblocks="[[inblocks]]" filteredblocks="{{resultBlocks}}"> </blocks-filter>
+
+        <blocks-order availableblocks="{{resultBlocks}}" usedblocks="{{myusedblocks}}"> </blocks-order>
+
+        Result:
+        <template is="dom-repeat" items="{{myusedblocks}}">
+          aaa <span>{{item.content}}</span><br>
+        </template>
+
+      </template>
+    </dom-module>
+
+    <script>
+        HTMLImports.whenReady(function() {
+          Polymer({
+            is: 'blocks-order-demo',
+            properties: {
+              myusedblocks:Array
+            },
+
+            ready:function(){
+              this.tagnames = ['C++', 'Java'];
+              this.templategetURL = 'http://rusty.blue/pieces';
+            }
+          });
+        });
+    </script>
+
+
+
+  </head>
+  <body>
+
+    <h4>Language selector</h4>
+    <cork-language-demo></cork-language-demo>
+
+    <h4>Blocks Filter</h4>
+    <blocks-filter-demo></blocks-filter-demo>
+
+    <h4>Blocks Order</h4>
+    <blocks-order-demo></blocks-order-demo>
+
+
+
+    <!-- <apps-home  debug serverurl="http://rusty.blue/applications"></apps-home> -->
+    <!-- <apps-login  debug loginurl="http://rusty.blue/simplelogin"></apps-login>
+    <apps-list  debug serverurl="http://rusty.blue/applications"></apps-list>
+    <apps-detail debug serverurl="http://rusty.blue/applications"></apps-detail>
+    <blocks-list  debug serverurl="http://rusty.blue/pieces"></blocks-list>
+    <blocks-detail debug serverurl="http://rusty.blue/pieces"></blocks-detail>
+    <templates-list debug  serverurl="http://rusty.blue/categories"></templates-list>
+    <templates-detail debug serverurl="http://rusty.blue/categories" templateserverurl="http://rusty.blue/pieces"></templates-detail>
+    <covers-list  debug serverurl="http://rusty.blue/documents"></covers-list>
+    <covers-detail debug serverurl="http://rusty.blue/documents" templateserverurl="http://rusty.blue/categories"></covers-detail>
+    <covers-new debug serverurl="http://rusty.blue/categories"></covers-new>
+ -->
+
+  </body>
+</html>
