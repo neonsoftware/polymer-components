@@ -1,0 +1,76 @@
+<!doctype html>
+<!--
+@license
+Copyright (c) 2015 The Polymer Project Authors. All rights reserved.
+This code may only be used under the BSD style license found at http://polymer.github.io/LICENSE.txt
+The complete set of authors may be found at http://polymer.github.io/AUTHORS.txt
+The complete set of contributors may be found at http://polymer.github.io/CONTRIBUTORS.txt
+Code distributed by Google as part of the polymer project is also
+subject to an additional IP rights grant found at http://polymer.github.io/PATENTS.txt
+-->
+<html>
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, minimum-scale=1.0, initial-scale=1.0, user-scalable=yes">
+    <title>rest-array Demo</title>
+    <script src="../../webcomponentsjs/webcomponents-lite.js"></script>
+    <link rel="import" href="../rest-array.html">
+  </head>
+  <body>
+
+    <dom-module id="rest-array-demo">
+      <template>
+        <rest-array id="rest_array" active="[[active]]" debug="[[debug]]" serverurl="[[serverurl]]" routeauth="login" onlineitems="{{onlineitems}}" on-unauthenticated="_onUnauth"></rest-array>
+
+        <h4>List of object at <span>{{serverurl}}</span></h4>
+
+        <ul>
+          <template is="dom-repeat" items="{{onlineitems}}">
+            <li><span style="font-size: 13px;">{{item.content}}</span></li>
+          </template>
+        </ul>
+
+        Active:<span>{{active}}</span><button on-click="_trigger_active">flip</button><br>
+        Debug:<span>{{debug}}<button on-click="_trigger_debug">flip</button><br>
+        ServerUrl:<span>{{serverurl}}<input id="new_url"></input><button on-click="_trigger_serverurl">set</button><br>
+      </template>
+
+      <script>
+          HTMLImports.whenReady(function() {
+            Polymer({
+              is: 'rest-array-demo',
+              properties: {
+                serverurl: {type: String, value: ""},
+                debug: { type: Boolean, value: false },
+                active: Boolean
+              },
+
+              ready: function(){
+                console.log("I am ready !");
+              },
+
+              _deleteElement: function(e) {
+                this.$.rest_array.deleteItem(e.model.item.id);
+              },
+
+              _trigger_active: function(e) {
+                this.active = !this.active;
+              },
+              _trigger_debug: function(e) {
+                this.debug = !this.active;
+              },
+              _trigger_serverurl: function(e) {
+                this.serverurl = document.querySelector('#new_url').value;
+              },
+              _onUnauth: function(){
+                console.log("Fired unauth !!");
+              }
+            });
+          });
+      </script>
+    </dom-module>
+
+    <rest-array-demo active debug serverurl="http://yard.neonrain.space/pieces"></rest-array-demo><br><br>
+
+  </body>
+</html>

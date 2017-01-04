@@ -1,0 +1,146 @@
+<link rel="import" href="../iron-ajax/iron-ajax.html">
+
+<!--
+An element providing a solution to no problem in particular.
+
+Example:
+
+
+    <rest-item debug active serverurl="http://eml.com/object"
+                onlineitems="{{remotearray}}" >
+    </rest-item>
+
+@group Seed Elements
+@element rest-item
+@demo demo/index.html
+@hero hero.svg
+-->
+
+<dom-module id="rest-item">
+  <template>
+    <iron-ajax id="ajax_get" method="GET" handle-as="json" content-type="application/json" on-error="_handle_get_error" last-response={{currentitem}}></iron-ajax>
+    <iron-ajax id="ajax_save" handle-as="json" content-type="application/json" on-response="_handle_save_ok" on-error="_handle_save_error"></iron-ajax>
+  </template>
+
+  <script>
+    Polymer({
+      is: 'rest-item',
+
+      properties: {
+
+
+        /**
+         * If true, debug prints are enabled
+         *
+         * @type Boolean
+         * @default false
+         */
+        debug: { type: Boolean, value: false },
+
+
+        /**
+         * When goes from false to true the remote object is fetched
+         *
+         * @type Boolean
+         */
+        active: Boolean,
+
+        /**
+         * The remote REST URL
+         *
+         * @type String
+         */
+        serverurl: {type: String, value: ""},
+
+        /**
+         * The current item
+         *
+         * @type String
+         */
+        elementid: {
+          type: String
+        },
+
+        /**
+         * The current item
+         *
+         * @type String
+         */
+        currentitem: {
+          type: Object,
+          notify: true
+        },
+
+        /**
+         * The default value for the current item. It is set at every toggling of the 'active' param
+         *
+         * @type String
+         */
+        defaultitem: {
+          type: Object,
+          value: ''
+        }
+      },
+
+      // Element Behavior
+
+      observers:[ '_updateInputs(active, elementid, serverurl)' ],
+
+      // Hanlidng initial state
+
+      _updateInputs: function(current_active, current_id, current_serverurl){
+        this.isnew = Boolean(this.elementid === "new");;
+
+        if(this.debug) console.log('Inputs updated. active: ', this.active, ' - elementid :', this.elementid,' - isnew :', this.isnew, ' - serverurl :', this.serverurl, ' - defaultitem : ', this.defaultitem );
+
+        // If view not selected or creating new elements: re-setting current element to default/empty
+        if( !this.active || this.isnew ){
+          console.log('Setting current item to default, ', this.defaultitem);
+          this.set( 'currentitem', this.defaultitem );
+        }
+
+        // If updating existing element. Pulling it from server
+        if( this.active && !this.isnew ){
+          this.$.ajax_get.url = this.serverurl + '/' + String(this.elementid) + '/';
+          this.$.ajax_get.generateRequest();
+        }
+      },
+
+      // Saving object to Server
+
+      save: function( serialized_object ){
+        if(this.debug) console.log("templates-detail :In the end pieces is : ", serialized_object );
+        this.$.ajax_save.url = this.isnew ? this.serverurl : this.serverurl + '/' + String(this.elementid) ;
+        this.$.ajax_save.method = this.isnew ? "POST" : "PUT";
+        this.$.ajax_save.body = serialized_object ;
+        this.$.ajax_save.generateRequest();
+      },
+
+      save_current: function( serialized_object ){
+        if(this.debug) console.log("Saving current element ! ", this.currentitem );
+        this.save( JSON.stringify(this.currentitem) );
+      },
+
+
+      // Handling REST results
+
+      _handle_get_error:function(response){
+        if( response.detail.error.message.indexOf("401") >-1 ){ this.fire('unauthenticated'); }
+        if( response.detail.error.message.indexOf("403") >-1 ){ this.fire('servererror'); }
+      },
+
+      _handle_save_ok:function(response){
+        if(this.isnew){
+          this.fire('addok');
+        }else{
+          this.fire('updateok');
+        }
+      },
+
+      _handle_save_error : function(response){
+        this.fire('saveerror');
+      },
+
+    });
+  </script>
+</dom-module>

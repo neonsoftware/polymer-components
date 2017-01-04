@@ -1,0 +1,99 @@
+<link rel="import" href="../iron-ajax/iron-ajax.html">
+
+<!--
+An element providing a solution to no problem in particular.
+
+Example:
+
+
+    <rest-array debug active serverurl="http://eml.com/object"
+                onlineitems="{{remotearray}}" >
+    </rest-array>
+
+@group Seed Elements
+@element rest-array
+@demo demo/index.html
+@hero hero.svg
+-->
+
+<dom-module id="rest-array">
+  <template>
+    <iron-ajax id="get_ajax" method="GET" url="{{serverurl}}" handle-as="json" last-response="{{onlineitems}}" on-error="_handleResponseError"></iron-ajax>
+    <iron-ajax id="delete_ajax" method="DELETE" url="{{deleteurl}}"  handle-as="json" on-response="_handleResponseOkRefresh"></iron-ajax>
+  </template>
+
+  <script>
+    Polymer({
+      is: 'rest-array',
+
+      properties: {
+
+
+        /**
+         * If true, debug prints are enabled
+         *
+         * @type Boolean
+         * @default false
+         */
+        debug: { type: Boolean, value: false },
+
+
+        /**
+         * When goes from false to true the remote object is fetched
+         *
+         * @type Boolean
+         */
+        active: Boolean,
+
+        /**
+         * The remote REST URL
+         *
+         * @type String
+         */
+        serverurl: {type: String, value: ""},
+
+        /**
+         * The current items array
+         *
+         * @type String
+         */
+        onlineitems: {
+          type: Array,
+          notify: true,
+          value:[]
+        },
+      },
+
+
+      observers:['_inputsUpdated(active, serverurl)'],
+
+      // Element Behavior
+
+      _inputsUpdated(current_active, current_serverurl){
+        if(this.debug) console.log("Inputs updated. Active : ", this.active, " Server url: ", this.serverurl );
+        if(this.active){
+          if(this.debug) console.log("Refreshing inputs. ");
+          this.$.get_ajax.generateRequest();
+        }
+      },
+
+      deleteItem: function(itemId) {
+        if(this.debug) console.log("Deleting item ", itemId);
+        this.deleteurl = this.serverurl + "/" + itemId;
+        this.$.delete_ajax.generateRequest();
+      },
+
+      _handleResponseOkRefresh:function(response){
+        if(this.debug) console.log("Delete done. Refreshing");
+        this.fire('deleteok');
+        this.$.get_ajax.generateRequest();
+      },
+
+      _handleResponseError:function(response){
+        if( response.detail.error.message.indexOf("401") >-1 ){ this.fire('unauthenticated'); }
+        if( response.detail.error.message.indexOf("403") >-1 ){ this.fire('servererror'); }
+      }
+
+    });
+  </script>
+</dom-module>

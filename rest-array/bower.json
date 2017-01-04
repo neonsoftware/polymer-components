@@ -1,0 +1,27 @@
+{
+  "name": "rest-array",
+  "version": "1.0.4",
+  "authors": [
+    "Anonymous <anonymous@example.com>"
+  ],
+  "description": "An element providing a solution to no problem in particular.",
+  "keywords": [
+    "web-component",
+    "polymer"
+  ],
+  "main": "rest-array.html",
+  "license": "http://polymer.github.io/LICENSE.txt",
+  "homepage": "https://github.com/<USERNAME>/rest-array/",
+  "ignore": [
+    "/.*",
+    "/test/"
+  ],
+  "dependencies": {
+    "polymer": "Polymer/polymer"
+  },
+  "devDependencies": {
+    "iron-component-page": "PolymerElements/iron-component-page",
+    "web-component-tester": "*",
+    "test-fixture": "PolymerElements/test-fixture"
+  }
+}

@@ -1,0 +1,79 @@
+<!doctype html>
+<!--
+@license
+Copyright (c) 2015 The Polymer Project Authors. All rights reserved.
+This code may only be used under the BSD style license found at http://polymer.github.io/LICENSE.txt
+The complete set of authors may be found at http://polymer.github.io/AUTHORS.txt
+The complete set of contributors may be found at http://polymer.github.io/CONTRIBUTORS.txt
+Code distributed by Google as part of the polymer project is also
+subject to an additional IP rights grant found at http://polymer.github.io/PATENTS.txt
+-->
+<html>
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, minimum-scale=1.0, initial-scale=1.0, user-scalable=yes">
+
+    <script src="../../webcomponentsjs/webcomponents-lite.js"></script>
+    <script src="../../web-component-tester/browser.js"></script>
+
+
+    <script src="../../test-fixture/test-fixture-mocha.js"></script>
+    <link rel="import" href="../../test-fixture/test-fixture.html">
+
+    <!-- Step 1: import the element to test -->
+    <link rel="import" href="../rest-item.html">
+  </head>
+  <body undefined>
+
+    <test-fixture id="basic">
+      <template>
+         <rest-item></rest-item>
+      </template>
+    </test-fixture>
+
+    <script>
+      suite('<rest-item>', function() {
+
+        var rest_item_component;
+
+        setup(function() {
+          rest_item_component = fixture('basic');
+        });
+
+        test('Get - not active', function(done) {
+          rest_item_component.serverurl = 'http://localhost:2121/pieces';
+          rest_item_component.defaultitem = {'content':''};
+          rest_item_component.active = false;
+          rest_item_component.debug = true;
+          rest_item_component.elementid = '39';
+          flush(function() {
+            console.log('current item is ', rest_item_component.currentitem);
+            assert.equal(0, rest_item_component.currentitem.content.length);
+            done();
+          });
+        });
+
+        test('Get - not active', function(done) {
+          rest_item_component.serverurl = 'http://localhost:2121/pieces';
+          rest_item_component.defaultitem = {'content':''};
+          rest_item_component.active = true;
+          rest_item_component.debug = true;
+          rest_item_component.elementid = '39';
+
+          setTimeout(function(){
+            flush(function() {
+            console.log('current item is ', rest_item_component.currentitem);
+            assert.equal(42, rest_item_component.currentitem.content.length);
+            done();
+          })}, 2000);
+
+        });
+
+
+
+
+      });
+    </script>
+
+  </body>
+</html>
