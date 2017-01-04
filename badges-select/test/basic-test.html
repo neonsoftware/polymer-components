@@ -1,0 +1,83 @@
+<!doctype html>
+<!--
+@license
+Copyright (c) 2015 The Polymer Project Authors. All rights reserved.
+This code may only be used under the BSD style license found at http://polymer.github.io/LICENSE.txt
+The complete set of authors may be found at http://polymer.github.io/AUTHORS.txt
+The complete set of contributors may be found at http://polymer.github.io/CONTRIBUTORS.txt
+Code distributed by Google as part of the polymer project is also
+subject to an additional IP rights grant found at http://polymer.github.io/PATENTS.txt
+-->
+<html>
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, minimum-scale=1.0, initial-scale=1.0, user-scalable=yes">
+
+    <script src="../../webcomponentsjs/webcomponents-lite.js"></script>
+    <script src="../../web-component-tester/browser.js"></script>
+
+
+    <script src="../../test-fixture/test-fixture-mocha.js"></script>
+    <link rel="import" href="../../test-fixture/test-fixture.html">
+
+    <!-- Step 1: import the element to test -->
+    <link rel="import" href="../badges-select.html">
+  </head>
+  <body>
+
+    <test-fixture id="basic">
+      <template>
+         <badges-select></badges-select>
+      </template>
+    </test-fixture>
+
+    <script>
+      suite('<badges-select>', function() {
+
+        var badges_component;
+
+        setup(function() {
+          badges_component = fixture('basic');
+        });
+
+        test('String filling - read only', function(done) {
+
+          badges_component.badgesstring = 'Java, Python, C' ;
+
+          // Data bindings will stamp out new DOM asynchronously
+          // so wait to check for updates
+          flush(function() {
+            assert.equal(0, badges_component.querySelectorAll('.boldy').length);       // All 3 thave shown up
+            assert.equal(3, badges_component.querySelectorAll('.badge-box').length);   // ..but no one starts selected
+            assert.equal(0, badges_component.selectedones.length);              // and one appears in the 'selected' array
+            badges_component.querySelectorAll('.badge-box')[0].click();                                               // Then CLICK the first !
+            assert.equal(0, badges_component.querySelectorAll('.boldy').length);      // .. and then no-one gets selected
+            assert.equal(0, badges_component.selectedones.length);              // and no-one appears in the 'selected' array
+            done();
+          });
+        });
+
+        test('String filling - edit', function(done) {
+
+          badges_component.badgesstring = 'Java, Python, C' ;
+          badges_component.toggle = true;
+
+          // Data bindings will stamp out new DOM asynchronously
+          // so wait to check for updates
+          flush(function() {
+            assert.equal(0, badges_component.querySelectorAll('.boldy').length);       // All 3 thave shown up
+            assert.equal(3, badges_component.querySelectorAll('.badge-box').length);   // ..but no one starts selected
+            assert.equal(0, badges_component.selectedones.length);              // and the 'selected' array is empty
+            badges_component.querySelectorAll('.badge-box')[0].click();                                               // Then CLICK the first !
+            assert.equal(1, badges_component.querySelectorAll('.boldy').length);      // .. and then, one is selected
+            assert.equal(1, badges_component.selectedones.length);              // and one appears in the 'selected' array
+            assert.equal('Java', badges_component.selectedones[0]);             // and it si actually 'Java'
+            done();
+          });
+        });
+
+      });
+    </script>
+
+  </body>
+</html>
