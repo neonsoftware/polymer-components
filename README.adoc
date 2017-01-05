@@ -1,0 +1,5 @@
+== Polymer components
+
+This is repository contains reusable webcomponents (rest and remote access) written for Polymer 1.0 that I am *not* actually maintaining. 
+
+Development for these entities will probably start back when Polymer 2.0 will be stable. 🚧
